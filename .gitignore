@@ -1,2 +1,4 @@
 .env
 __pycache__
+functions/__pycache__
+bd/__pycache__

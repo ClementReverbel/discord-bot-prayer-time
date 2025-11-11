@@ -1,10 +1,11 @@
 from discord.ext import commands
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
+from time import strftime
 import functions.callAPI as API
 
 
-def prayer_adjust_time(date=None,ville=None):
+def prayer_adjust_time(date=strftime("%d-%m-%Y"),ville="Neuchatel"):
 
     # Fonction pour retirer le décalage aux temps de prière
     def ajust_time(time_str, decalage_min="20"):
@@ -30,7 +31,7 @@ def prayer_adjust_time(date=None,ville=None):
     return alarm_list
 
 
-def prayer_time(date=None, ville=None):
+def prayer_time(date=strftime("%d-%m-%Y"), ville="Neuchatel"):
 
     data = API.getRawDataPrayerTime(date, ville)
     fajr = data["data"]["timings"]["Fajr"]
