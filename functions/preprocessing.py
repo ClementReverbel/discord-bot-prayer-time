@@ -1,9 +1,11 @@
 from discord.ext import commands
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
-from time import strftime
+from time import strftime, sleep
 import bd.acces_bd as bd
 import functions.callAPI as API
+import asyncio
+import core
 
 def prayer_time(date=strftime("%d-%m-%Y"), ville="Neuchatel"):
 
@@ -53,3 +55,21 @@ def set_reminder_by_user(user,ville,decalage):
     for h in horaires:
         bd.insert_time(h,user)
 
+def get_all_times_set():
+    rows = bd.get_all_time()
+    return {r[0] for r in rows} if rows else set()
+
+async def watch_times_forever(bot):
+    while True:
+        now = datetime.now()
+        current_time = now.strftime('%H:%M')
+        times = get_all_times_set()
+        if current_time in times:
+            users = bd.get_users_by_time(current_time)
+            users = [u[0] for u in users]
+            for user_id in users:
+                await core.handle_user_action(bot, user_id, "sounds/notification.mp3")
+
+        # Dormir jusqu'à la prochaine minute (précis au niveau des secondes)
+        seconds_to_next_minute = 60 - now.second - now.microsecond / 1_000_000
+        await asyncio.sleep(seconds_to_next_minute)
