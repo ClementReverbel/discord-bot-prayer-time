@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import callAPI as API
 
 
-def prayer_adjust_time():
+def prayer_adjust_time(date=None,ville=None):
 
     # Fonction pour retirer le décalage aux temps de prière
     def ajust_time(time_str, decalage_min="20"):
@@ -21,7 +21,7 @@ def prayer_adjust_time():
         # Retourner au format hh:mm
         return adjusted_time.strftime('%H:%M')
 
-    data = API.getRawDataPrayerTime()
+    data = API.getRawDataPrayerTime(date,ville)
     fajr = data["data"]["timings"]["Fajr"]
     Dhuhr = data["data"]["timings"]["Dhuhr"]
     Asr = data["data"]["timings"]["Asr"]
