@@ -1,7 +1,7 @@
 from nt import environ
 import discord
 from discord.ext import commands
-import preprocessing as PP
+import functions.preprocessing as PP
 
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=intents)

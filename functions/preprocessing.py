@@ -1,7 +1,7 @@
 from discord.ext import commands
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
-import callAPI as API
+import functions.callAPI as API
 
 
 def prayer_adjust_time(date=None,ville=None):
