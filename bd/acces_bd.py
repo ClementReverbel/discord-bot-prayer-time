@@ -27,6 +27,24 @@ def update_decalage(personne, new_decalage):
     con.close()
     return "Mise a jour reussie"
 
+def get_decalage_by_user(personne):
+    con = sqlite3.connect('./bd/bd.db')
+    cur = con.cursor()
+    cur.execute("SELECT decalage FROM prayer_time WHERE personne = ?", (personne,))
+    row = cur.fetchone()
+    cur.close()
+    con.close()
+    return row
+
+def get_ville_by_user(personne):
+    con = sqlite3.connect('./bd/bd.db')
+    cur = con.cursor()
+    cur.execute("SELECT ville FROM prayer_time WHERE personne = ?", (personne,))
+    row = cur.fetchone()
+    cur.close()
+    con.close()
+    return row
+
 def select_all():
     con = sqlite3.connect('./bd/bd.db')
     cur = con.cursor()
