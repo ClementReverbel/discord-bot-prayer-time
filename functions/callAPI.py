@@ -29,7 +29,3 @@ def getRawDataPrayerTime(date=strftime("%d-%m-%Y"),ville="Neuchatel"):
     body = buffer.getvalue()
     data = body.decode('iso-8859-1')
     return json.loads(data)
-
-
-
-print(getRawDataPrayerTime())
