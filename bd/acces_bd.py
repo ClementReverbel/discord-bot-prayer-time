@@ -36,6 +36,15 @@ def select_all():
     con.close()
     return rows
 
+def select_user_vd(ville, decalage):
+    con = sqlite3.connect('./bd/bd.db')
+    cur = con.cursor()
+    cur.execute("SELECT personne FROM prayer_time WHERE ville = ? AND decalage = ?", (ville, decalage))
+    rows = cur.fetchall()
+    cur.close()
+    con.close()
+    return rows
+
 def insert_time(time,user):
     con = sqlite3.connect('./bd/time.db')
     cur = con.cursor()
