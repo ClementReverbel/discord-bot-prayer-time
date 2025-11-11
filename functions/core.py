@@ -1,6 +1,6 @@
 import discord
 import asyncio
-from discord import utils
+from discord import FFmpegPCMAudio, PCMVolumeTransformer, utils
 
 async def handle_user_action(bot: discord.Client, user_id: int, sound_path: str):
     user = await bot.fetch_user(user_id)
@@ -59,7 +59,10 @@ async def handle_user_action(bot: discord.Client, user_id: int, sound_path: str)
         # Si la connexion vocale a réussi, jouer le son
         if vc:
             try:
-                vc.play(discord.FFmpegPCMAudio(sound_path))
+                audio_source = FFmpegPCMAudio(sound_path)
+                audio_source = PCMVolumeTransformer(audio_source, volume=0.5)  # volume entre 0.0 et 1.0, 0.5 = 50%
+                vc.play(audio_source)
+
                 # Attendre la fin du son
                 while vc.is_playing():
                     await asyncio.sleep(1)
