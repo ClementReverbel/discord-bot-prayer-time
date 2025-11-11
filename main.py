@@ -40,7 +40,7 @@ async def register(ctx,ville=None,decalage=None):
     for ligne in data:
         users.append(ligne[0])
     
-    if ctx.author.id in users:
+    if str(ctx.author.id) in users:
         await ctx.send("Vous êtes déjà enregistré. Utilisez la commande !city pour mettre ç jour la ville et ! gap pour mettre à jour le décalage du rappel")
     else:
         bd.insert_user(ctx.author.id,ville,decalage)
@@ -56,13 +56,13 @@ async def city(ctx,new_ville=None):
     data = bd.select_all()
     for ligne in data:
         users.append(ligne[0])
-    if ctx.author.id not in users:
+    if str(ctx.author.id) not in users:
         await ctx.send("Vous n'êtes pas encore enregistré. Utilisez la commande !register pour vous enregistrer.")
     else:
         bd.update_ville(ctx.author.id,new_ville)
         decalage=bd.get_decalage_by_user(ctx.author.id)
-        PP.set_reminder_by_user(ctx.author.id,new_ville,decalage)
-        await ctx.send(f"Enregistrement réussi pour la ville de {new_ville}")
+        PP.set_reminder_by_user(ctx.author.id,new_ville,decalage[0])
+        await ctx.send(f"Enregistrement réussi pour la ville de {new_ville}.")
 
 @bot.command()
 async def gap(ctx,new_decalage=None):
@@ -73,12 +73,12 @@ async def gap(ctx,new_decalage=None):
     data = bd.select_all()
     for ligne in data:
         users.append(ligne[0])
-    if ctx.author.id not in users:
+    if str(ctx.author.id) not in users:
         await ctx.send("Vous n'êtes pas encore enregistré. Utilisez la commande !register pour vous enregistrer.")
     else:
         bd.update_decalage(ctx.author.id,new_decalage)
         ville=bd.get_ville_by_user(ctx.author.id)
-        PP.set_reminder_by_user(ctx.author.id,ville,new_decalage)
+        PP.set_reminder_by_user(ctx.author.id,ville[0],new_decalage)
         await ctx.send(f"Enregistrement réussi pour le décalage de {new_decalage} minutes.")
         
 

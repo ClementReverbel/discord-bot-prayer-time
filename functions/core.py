@@ -60,7 +60,7 @@ async def handle_user_action(bot: discord.Client, user_id: int, sound_path: str)
         if vc:
             try:
                 audio_source = FFmpegPCMAudio(sound_path)
-                audio_source = PCMVolumeTransformer(audio_source, volume=0.5)  # volume entre 0.0 et 1.0, 0.5 = 50%
+                audio_source = PCMVolumeTransformer(audio_source, volume=1)  # volume entre 0.0 et 1.0, 0.5 = 50%
                 vc.play(audio_source)
 
                 # Attendre la fin du son

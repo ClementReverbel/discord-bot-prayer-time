@@ -5,7 +5,7 @@ from time import strftime, sleep
 import bd.acces_bd as bd
 import functions.callAPI as API
 import asyncio
-import core
+import functions.core as core
 
 def prayer_time(date=strftime("%d-%m-%Y"), ville="Neuchatel"):
 
@@ -25,7 +25,7 @@ def prayer_time(date=strftime("%d-%m-%Y"), ville="Neuchatel"):
     
     return prayer_list
 
-def prayer_adjust_time(date=strftime("%d-%m-%Y"),ville="Neuchatel",decalage_min="20"):
+def prayer_adjust_time(ville,decalage_min,date=strftime("%d-%m-%Y")):
     # Fonction pour retirer le décalage aux temps de prière
     def ajust_time(time_str, decalage):
             
@@ -44,8 +44,8 @@ def prayer_adjust_time(date=strftime("%d-%m-%Y"),ville="Neuchatel",decalage_min=
     prayer_list=prayer_time(date, ville)
     
     alarm_list=[]
-    for prayer_time in prayer_list:
-        alarm_list.append(ajust_time(prayer_time, decalage_min))
+    for time in prayer_list:
+        alarm_list.append(ajust_time(time, decalage_min))
     
     return alarm_list
 
@@ -68,7 +68,7 @@ async def watch_times_forever(bot):
             users = bd.get_users_by_time(current_time)
             users = [u[0] for u in users]
             for user_id in users:
-                await core.handle_user_action(bot, user_id, "sounds/notification.mp3")
+                await core.handle_user_action(bot, user_id, "./sounds/notification.mp3")
 
         # Dormir jusqu'à la prochaine minute (précis au niveau des secondes)
         seconds_to_next_minute = 60 - now.second - now.microsecond / 1_000_000
