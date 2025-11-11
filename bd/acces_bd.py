@@ -35,3 +35,39 @@ def select_all():
     cur.close()
     con.close()
     return rows
+
+def insert_time(time,user):
+    con = sqlite3.connect('./bd/time.db')
+    cur = con.cursor()
+    cur.execute("INSERT INTO timings_connex (time, user) VALUES (?, ?)", (time,user))
+    con.commit()
+    cur.close()
+    con.close()
+    return "Insertion reussie"
+
+def get_all_time():
+    con = sqlite3.connect('./bd/time.db')
+    cur = con.cursor()
+    cur.execute("SELECT time FROM timings_connex")
+    rows = cur.fetchall()
+    cur.close()
+    con.close()
+    return rows
+
+def delete_time(user):
+    con = sqlite3.connect('./bd/time.db')
+    cur = con.cursor()
+    cur.execute("DELETE FROM timings_connex WHERE user = ?", (user,))
+    con.commit()
+    cur.close()
+    con.close()
+    return "Suppression reussie"
+
+def get_users(time):
+    con = sqlite3.connect('./bd/time.db')
+    cur = con.cursor()
+    cur.execute("SELECT user FROM timings_connex WHERE time = ?", (time,))
+    rows = cur.fetchall()
+    cur.close()
+    con.close()
+    return rows
