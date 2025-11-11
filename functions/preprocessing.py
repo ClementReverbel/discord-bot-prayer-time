@@ -1,10 +1,10 @@
 from discord.ext import commands
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
-import callAPI as API
+import functions.callAPI as API
 
 
-def prayer_adjust_time():
+def prayer_adjust_time(date=None,ville=None):
 
     # Fonction pour retirer le décalage aux temps de prière
     def ajust_time(time_str, decalage_min="20"):
@@ -21,20 +21,31 @@ def prayer_adjust_time():
         # Retourner au format hh:mm
         return adjusted_time.strftime('%H:%M')
 
-    data = API.getRawDataPrayerTime()
+    prayer_list=prayer_time(date, ville)
+    
+    alarm_list=[]
+    for prayer_time in prayer_list:
+        alarm_list.append(ajust_time(prayer_time))
+    
+    return alarm_list
+
+
+def prayer_time(date=None, ville=None):
+
+    data = API.getRawDataPrayerTime(date, ville)
     fajr = data["data"]["timings"]["Fajr"]
     Dhuhr = data["data"]["timings"]["Dhuhr"]
     Asr = data["data"]["timings"]["Asr"]
     Maghrib = data["data"]["timings"]["Maghrib"]
     Isha = data["data"]["timings"]["Isha"]
     
-    alarm_list=[]
-    alarm_list.append(ajust_time(fajr))
-    alarm_list.append(ajust_time(Dhuhr))
-    alarm_list.append(ajust_time(Asr))
-    alarm_list.append(ajust_time(Maghrib))
-    alarm_list.append(ajust_time(Isha))
+    prayer_list = []
+    prayer_list.append(fajr)
+    prayer_list.append(Dhuhr)
+    prayer_list.append(Asr)
+    prayer_list.append(Maghrib)
+    prayer_list.append(Isha)
     
-    return alarm_list
+    return prayer_list
 
 
