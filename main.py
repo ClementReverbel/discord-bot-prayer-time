@@ -2,6 +2,11 @@ from nt import environ
 import discord
 from discord.ext import commands
 import functions.preprocessing as PP
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+token = os.getenv('TOKEN_BOT')
 
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=intents)
@@ -17,7 +22,7 @@ async def status(ctx):
     
 @bot.command()
 async def planning(ctx):
-    prayer_list=PP.prayer_adjust_time()
+    prayer_list=PP.prayer_time()
     msg = "Vos prières auront lieu aujourd'hui :"
     for prayer_time in prayer_list:
         msg += f"\n- {prayer_time}"
@@ -31,4 +36,4 @@ async def who(ctx):
 async def register(ctx,ville,decalage):
     await ctx.send("Fonction d'enregistrement non encore implémentée.")
 
-bot.run(environ.get("DISCORD_BOT_TOKEN"))   
+bot.run(token)
