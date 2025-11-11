@@ -39,17 +39,38 @@ async def handle_user_action(bot: discord.Client, user_id: int, sound_path: str)
                 # si move_to échoue, on ignore et on utilise la connexion existante
                 pass
         else:
-            vc = await voice_channel.connect()
-        
-        # Jouer le son (doit être un fichier lisible par FFmpeg, ex: .mp3, .wav)
-        vc.play(discord.FFmpegPCMAudio(sound_path))
-        
-        # Attendre la fin du son
-        while vc.is_playing():
-            await asyncio.sleep(1)
-        
-        await vc.disconnect()
-        print(f"Son joué pour {user.name}")
+            # Vérifier que le bot a la permission de se connecter et parler
+            bot_member = voice_channel.guild.me
+            perms = voice_channel.permissions_for(bot_member) if bot_member else None
+            if perms and (not perms.connect or not perms.speak):
+                print(f"Le bot n\'a pas la permission de se connecter/parler dans {voice_channel.name} (guild {voice_channel.guild.id}).")
+                vc = None
+            else:
+                try:
+                    vc = await voice_channel.connect()
+                except RuntimeError as e:
+                    # Erreur typique si PyNaCl est absent
+                    print(f"Erreur en se connectant au vocal : {e}")
+                    vc = None
+                except Exception as e:
+                    print(f"Erreur inattendue lors de la connexion vocale : {e}")
+                    vc = None
+
+        # Si la connexion vocale a réussi, jouer le son
+        if vc:
+            try:
+                vc.play(discord.FFmpegPCMAudio(sound_path))
+                # Attendre la fin du son
+                while vc.is_playing():
+                    await asyncio.sleep(1)
+            except Exception as e:
+                print(f"Impossible de jouer le son: {e}")
+            finally:
+                try:
+                    await vc.disconnect()
+                except Exception as e:
+                    print(f"Erreur lors de la déconnexion vocale: {e}")
+            print(f"Son joué pour {user.name}")
     
     else:
         print(f"L'utilisateur {user.name} n'est pas en vocal, envoi d'un MP...")
