@@ -72,7 +72,7 @@ def delete_time(user):
     con.close()
     return "Suppression reussie"
 
-def get_users(time):
+def get_users_by_time(time):
     con = sqlite3.connect('./bd/time.db')
     cur = con.cursor()
     cur.execute("SELECT user FROM timings_connex WHERE time = ?", (time,))

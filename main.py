@@ -14,7 +14,7 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 
 @bot.event
 async def on_ready():
-    print(f'Le bot \"{bot.user}\" a été démarré')
+    print(f'Le bot \"{bot.user}\" a été démarré')    
 
 @bot.command()
 async def status(ctx):
@@ -43,6 +43,7 @@ async def register(ctx,ville=None,decalage=None):
         await ctx.send("Vous êtes déjà enregistré. Utilisez la commande !city pour mettre ç jour la ville et ! gap pour mettre à jour le décalage du rappel")
     else:
         bd.insert_user(ctx.author.name,ville,decalage)
+        PP.set_reminder_by_user(ctx.author.name,ville,decalage)
         await ctx.send(f"Enregistrement réussi pour la ville de {ville} avec un décalage de {decalage} minutes.")
 
 @bot.command()
@@ -58,6 +59,7 @@ async def city(ctx,new_ville=None):
         await ctx.send("Vous n'êtes pas encore enregistré. Utilisez la commande !register pour vous enregistrer.")
     else:
         bd.update_ville(ctx.author.name,new_ville)
+        PP.set_reminder_by_user(ctx.author.name,new_ville,decalage)
         await ctx.send(f"Enregistrement réussi pour la ville de {new_ville}")
 
 @bot.command()
@@ -74,5 +76,8 @@ async def gap(ctx,new_decalage=None):
     else:
         bd.update_decalage(ctx.author.name,new_decalage)
         await ctx.send(f"Enregistrement réussi pour le décalage de {new_decalage} minutes.")
+        
+
+
 
 bot.run(token)
