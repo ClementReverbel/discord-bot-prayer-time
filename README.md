@@ -23,6 +23,10 @@ Prérequis : Python 3.8+ et accès internet.
 
 	pip install discord.py python-dotenv requests
 
+    Il faut également télécharger FFMpeg via un CMD Admin : 
+
+    choco install ffmpeg -y
+
 3. Configurer vos variables d'environnement :
 
 	Créer un fichier `.env` à la racine du projet et y ajouter au minimum :
