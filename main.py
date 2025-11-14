@@ -12,11 +12,13 @@ token = os.getenv('TOKEN_BOT')
 
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=intents)
+bot.remove_command('help')
 
 @bot.event
 async def on_ready():
     print(f'Le bot \"{bot.user}\" a été démarré')    
     bot.loop.create_task(PP.watch_times_forever(bot))
+    
 
 @bot.command()
 async def status(ctx):
@@ -93,8 +95,13 @@ async def ping(ctx):
 
 @bot.command()
 async def suppr(ctx):
+    all_users = bd.select_all()
+    if str(ctx.author.id) not in [str(user[0]) for user in all_users]:
+        await ctx.send("Vous n'êtes pas encore enregistré. Utilisez la commande !register pour vous enregistrer.")
+        return
     PP.remove_user(ctx.author.id)
     await ctx.send(f"Suppression de vos données réussie.")
+
 @bot.command()
 async def help(ctx):
     help_message = """
@@ -106,6 +113,7 @@ async def help(ctx):
     !gap <nouveau_décalage> - Met à jour le décalage en minutes pour vos rappels de prière.
     !ping - Teste la fonctionnalité de notification du bot.
     !help - Affiche ce message d'aide.
+    !suppr - Supprime vos données enregistrées.
     """
     await ctx.send(help_message)        
     
