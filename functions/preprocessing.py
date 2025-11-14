@@ -73,3 +73,8 @@ async def watch_times_forever(bot):
         # Dormir jusqu'à la prochaine minute (précis au niveau des secondes)
         seconds_to_next_minute = 60 - now.second - now.microsecond / 1_000_000
         await asyncio.sleep(seconds_to_next_minute)
+        
+def remove_user(user):
+    bd.delete_time(user)
+    bd.delete_user(user)
+    

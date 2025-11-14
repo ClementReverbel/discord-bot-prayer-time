@@ -45,6 +45,15 @@ def get_ville_by_user(personne):
     con.close()
     return row
 
+def delete_user(personne):
+    con = sqlite3.connect('./bd/bd.db')
+    cur = con.cursor()
+    cur.execute("DELETE FROM prayer_time WHERE personne = ?", (personne,))
+    con.commit()
+    cur.close()
+    con.close()
+    return "Suppression reussie"
+
 def select_all():
     con = sqlite3.connect('./bd/bd.db')
     cur = con.cursor()

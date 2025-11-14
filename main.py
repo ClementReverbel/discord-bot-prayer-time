@@ -87,6 +87,10 @@ async def gap(ctx,new_decalage=None):
 async def ping(ctx):
     await test.handle_user_action(bot,"446282191442411520","sounds/notification.mp3")
 
+@bot.command()
+async def suppr(ctx):
+    PP.remove_user(ctx.author.id)
+    await ctx.send(f"Suppression de vos données réussie.")
 
 
 bot.run(token)
