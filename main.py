@@ -25,8 +25,12 @@ async def status(ctx):
     
 @bot.command()
 async def planning(ctx):
-    prayer_list=PP.prayer_time()
-    msg = "Vos prières auront lieu aujourd'hui à :"
+    ville=bd.get_ville_by_user(ctx.author.id)
+    if ville is None:
+        await ctx.send("Vous n'êtes pas encore enregistré. Utilisez la commande !register pour vous enregistrer.")
+        return
+    prayer_list=PP.prayer_time(ville=ville[0])
+    msg = "Les horaires de vos prières auront lieu aujourd'hui à :"
     for prayer_time in prayer_list:
         msg += f"\n- {prayer_time}"
     await ctx.send(msg)
@@ -85,12 +89,41 @@ async def gap(ctx,new_decalage=None):
 
 @bot.command()
 async def ping(ctx):
-    await test.handle_user_action(bot,"446282191442411520","sounds/notification.mp3")
+    await test.handle_user_action(bot,ctx.author.id,"sounds/notification.mp3")
 
 @bot.command()
 async def suppr(ctx):
     PP.remove_user(ctx.author.id)
     await ctx.send(f"Suppression de vos données réussie.")
-
+@bot.command()
+async def help(ctx):
+    help_message = """
+    Commandes disponibles :
+    !status - Vérifie si le bot est en ligne.
+    !planning - Affiche les horaires de prière pour aujourd'hui.
+    !register <ville> <décalage> - Enregistre votre ville et le décalage en minutes pour les rappels de prière.
+    !city <nouvelle_ville> - Met à jour votre ville enregistrée.
+    !gap <nouveau_décalage> - Met à jour le décalage en minutes pour vos rappels de prière.
+    !ping - Teste la fonctionnalité de notification du bot.
+    !help - Affiche ce message d'aide.
+    """
+    await ctx.send(help_message)        
+    
+@bot.command()
+async def profile(ctx):
+    user_id = ctx.author.id
+    ville = bd.get_ville_by_user(user_id)
+    decalage = bd.get_decalage_by_user(user_id)
+    
+    if ville is None or decalage is None:
+        await ctx.send("Vous n'êtes pas encore enregistré. Utilisez la commande !register pour vous enregistrer.")
+        return
+    
+    profile_message = f"""
+    Profil de l'utilisateur {ctx.author.name} :
+    - Ville : {ville[0]}
+    - Décalage des rappels : {decalage[0]} minutes
+    """
+    await ctx.send(profile_message)
 
 bot.run(token)
