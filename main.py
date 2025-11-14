@@ -4,6 +4,7 @@ from discord.ext import commands
 import functions.preprocessing as PP
 import os
 from dotenv import load_dotenv
+import functions.core as test
 import bd.acces_bd as bd
 
 load_dotenv()
@@ -81,6 +82,10 @@ async def gap(ctx,new_decalage=None):
         PP.set_reminder_by_user(ctx.author.id,ville[0],new_decalage)
         await ctx.send(f"Enregistrement réussi pour le décalage de {new_decalage} minutes.")
         
+
+@bot.command()
+async def ping(ctx):
+    await test.handle_user_action(bot,"446282191442411520","sounds/notification.mp3")
 
 
 
