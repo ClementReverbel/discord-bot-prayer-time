@@ -59,6 +59,14 @@ def get_all_times_set():
     rows = bd.get_all_time()
     return {r[0] for r in rows} if rows else set()
 
+def reset_reminders():
+    all_users = bd.select_all()
+    for user in all_users:
+        user_id = user[0]
+        ville = user[1]
+        decalage = user[2]
+        set_reminder_by_user(user_id, ville, decalage)
+
 async def watch_times_forever(bot):
     while True:
         now = datetime.now()
@@ -70,6 +78,9 @@ async def watch_times_forever(bot):
             for user_id in users:
                 await core.handle_user_action(bot, user_id, "./sounds/notification.mp3")
 
+        if current_time == "00:00":
+            reset_reminders()
+                
         # Dormir jusqu'à la prochaine minute (précis au niveau des secondes)
         seconds_to_next_minute = 60 - now.second - now.microsecond / 1_000_000
         await asyncio.sleep(seconds_to_next_minute)

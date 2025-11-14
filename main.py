@@ -17,6 +17,7 @@ bot.remove_command('help')
 @bot.event
 async def on_ready():
     print(f'Le bot \"{bot.user}\" a été démarré')    
+    PP.reset_reminders()
     bot.loop.create_task(PP.watch_times_forever(bot))
     
 
